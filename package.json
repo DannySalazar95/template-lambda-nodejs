@@ -1,0 +1,30 @@
+{
+  "name": "lambda-nodejs-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy --verbose",
+    "remove": "serverless remove",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "serverless offline"
+  },
+  "keywords": [],
+  "author": "Danny Salazar",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.138",
+    "serverless": "3.38.0",
+    "serverless-dotenv-plugin": "6.0.0",
+    "serverless-esbuild": "1.52.1",
+    "serverless-offline": "13.6.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.583.0",
+    "@aws-sdk/lib-dynamodb": "3.583.0",
+    "@middy/core": "5.3.5",
+    "@middy/http-error-handler": "5.3.5",
+    "@middy/http-json-body-parser": "5.3.5",
+    "@middy/validator": "5.3.5"
+  }
+}

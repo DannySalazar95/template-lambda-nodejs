@@ -1,0 +1,59 @@
+service: "HelloWorld"
+useDotenv: true
+
+resources:
+  Resources:
+    BookTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: books
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: 'us-east-2'
+  profile: 'default'
+  environment:
+    DYNAMO_DB_LOCAL_ACCESS_KEY_ID: ${env.DYNAMO_DB_LOCAL_ACCESS_KEY_ID}
+    DYNAMO_DB_LOCAL_SECRET_ACCESS_KEY: ${env.DYNAMO_DB_LOCAL_SECRET_ACCESS_KEY}
+    DYNAMO_DB_LOCAL_AWS_REGION: ${env.DYNAMO_DB_LOCAL_AWS_REGION}
+    DYNAMO_DB_LOCAL_ENDPOINT: ${env.DYNAMO_DB_LOCAL_ENDPOINT}
+    DYNAMO_DB_REMOTE_AWS_REGION: ${env.DYNAMO_DB_REMOTE_AWS_REGION}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - Fn::GetAtt:
+            - BookTable
+            - Arn
+
+functions:
+  getBooks:
+    handler: src/model_x/getBooks.handler
+    events:
+      - httpApi: GET /api/v1/books
+  createBook:
+    handler: src/model_x/createBook.handler
+    events:
+      - httpApi: POST /api/v1/books
+  deleteBook:
+    handler: src/model_x/deleteBook.handler
+    events:
+      - httpApi: DELETE /api/v1/books/{id_book}
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-dotenv-plugin
